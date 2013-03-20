@@ -83,7 +83,7 @@ def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
     # Let's collect some statistics
     brackets = []
     for trial in xrange(ntrials):
-        g = choice(range(ng)) # choose a random game to swap
+        g = randint(0, ng+1) #choice(xrange(ng)) # choose a random game to swap
         #print "attempted swap for game",g#,"in round",round[g]
         newbracket = deepcopy(b)
         newbracket.swap(g)

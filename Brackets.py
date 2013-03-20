@@ -44,7 +44,7 @@ def playgamesfortesting(team1, team2, ntrials, T):
           "winning should be")
     print exp(-deltaU(team1,team2)/T)
     wins = {team1:0,team2:0}
-    for i in range(ntrials):
+    for i in xrange(ntrials):
         winner,loser = playgame(team1,team2,T)
         wins[winner] = wins[winner] + 1
     print("wins {} {} {} {} {}".format(wins, wins[team1]/wins[team2], 
@@ -75,7 +75,7 @@ def runbracket(teams, T):
 
 def bracket_energy(all_winners):
     total_energy = 0.0
-    for i in range(len(all_winners)-1):
+    for i in xrange(len(all_winners)-1):
         games = pairs(all_winners[i])
         winners = all_winners[i+1]
         for (team1, team2),winner in zip(games, winners):
@@ -86,11 +86,11 @@ def bracket_energy(all_winners):
     return total_energy
 
 def getroundmap(bracket, include_game_number):
-    games_in_rounds = [2**i for i in reversed(range(len(bracket)-1))]
+    games_in_rounds = [2**i for i in reversed(xrange(len(bracket)-1))]
     round = {}
     g = 0
     for (i,gir) in enumerate(games_in_rounds):
-        for j in range(gir):
+        for j in xrange(gir):
             if include_game_number:
                 round[g] = (i,j)
             else:
@@ -112,9 +112,11 @@ class Bracket(object):
         self.teams = teams
         self.T = T
         self.bracket = runbracket(self.teams, self.T)
-        self.games_in_rounds = [2**i for i in reversed(range(len(self.bracket)-1))]
-        self.roundmap = getroundmap(self.bracket,include_game_number=False)
-        self.roundmap_with_game_numbers = getroundmap(self.bracket,include_game_number=True)
+        self.games_in_rounds = [2**i for i in 
+                                reversed(xrange(len(self.bracket)-1))]
+        self.roundmap = getroundmap(self.bracket, include_game_number=False)
+        self.roundmap_with_game_numbers = getroundmap(self.bracket, 
+                                                      include_game_number=True)
     def energy(self):
         return bracket_energy(self.bracket)
     def __str__(self):
@@ -126,7 +128,8 @@ class Bracket(object):
         """Return (team1,team2,winner).
         """
         t1,t2,win = self._getgameidxs(g)
-        return self.bracket[t1[0]][t1[1]],self.bracket[t2[0]][t2[1]],self.bracket[win[0]][win[1]]
+        return (self.bracket[t1[0]][t1[1]], self.bracket[t2[0]][t2[1]],
+                self.bracket[win[0]][win[1]])
     def _round_teaminround_to_game(self,r,gir):
         
         return sum(self.games_in_rounds[:r]) + int(gir/2)
@@ -137,9 +140,12 @@ class Bracket(object):
         # 0 2 4 6 # teams 2
         # 0 0 1 1 # games 2
         round,game_in_round = self.roundmap_with_game_numbers[g]
-        return (round,2*game_in_round),(round,2*game_in_round+1),(round+1,game_in_round)
+        return ((round,2*game_in_round), (round,2*game_in_round+1), 
+                (round+1,game_in_round))
     def _setwinner(self,g,winner):
-        """ JUST SETS THE WINNER, DOES NOT LOOK TO NEXT ROUND! USE SWAP FOR THAT! """
+        """ JUST SETS THE WINNER, DOES NOT LOOK TO NEXT ROUND! USE SWAP FOR 
+        THAT! 
+        """
         t1,t2,win = self._getgameidxs(g)
         self.bracket[win[0]][win[1]] = winner
     def swap(self,g):
@@ -148,20 +154,20 @@ class Bracket(object):
         """
         team1,team2,winner = self.game(g)
         if team1 == winner:
-            self._setwinner(g,team2)
+            self._setwinner(g, team2)
         else:
-            self._setwinner(g,team1)
+            self._setwinner(g, team1)
         wr,wt = self._getgameidxs(g)[2]
-        ng = self._round_teaminround_to_game(wr,wt)
+        ng = self._round_teaminround_to_game(wr, wt)
         while ng < sum(self.games_in_rounds):
             #print "Now need to check game",wr,wt,ng,self.game(ng)
-            winner,loser = playgame(self.game(ng)[0],self.game(ng)[1],self.T)
-            self._setwinner(ng,winner)
+            winner,loser = playgame(self.game(ng)[0], self.game(ng)[1], self.T)
+            self._setwinner(ng, winner)
             wr,wt = self._getgameidxs(ng)[2]
-            ng = self._round_teaminround_to_game(wr,wt)
+            ng = self._round_teaminround_to_game(wr, wt)
     def upsets(self):
         result = 0
-        for g in range(sum(self.games_in_rounds)):
+        for g in xrange(sum(self.games_in_rounds)):
             t1,t2,win = self.game(g)
             if t1 == win:
                 los = t2
@@ -181,11 +187,12 @@ def bracket_to_string(all_winners):
     # will just get truncated.
     maxlen = max([len(s) for s in all_winners[0]])
     dt = np.dtype([('name', np.str_, maxlen)])
-    results = array([['' for i in range(len(all_winners[0]))] for j in range(nrounds)],dtype=dt['name'])
+    results = array([['' for i in xrange(len(all_winners[0]))] for j in 
+                     xrange(nrounds)], dtype=dt['name'])
     # First round, all of the spots are filled
     results[0] = all_winners[0]
     # all other rounds, we split the row in half and fill from the middle out.
-    for i in range(nrounds)[1:]: # we've done the 1st and last already
+    for i in xrange(1, nrounds): # we've done the 1st and last already
         # round 1 skips two, round 2 skips 4, etc.
         these_winners = all_winners[i]
         # Fill top half
@@ -216,7 +223,8 @@ def bracket_to_string(all_winners):
     stub = '%-25s ' + ' '.join(['%-8s']*(nrounds-1))
     for i in xrange(len(all_winners[0])):
         these = results[:,i]
-        these = [tr(these[0],include_rank=True)] + [tr(i,maxlen=3,include_rank=True) for i in these[1:]]
+        these = [tr(these[0], include_rank=True)] + \
+            [tr(i, maxlen=3, include_rank=True) for i in these[1:]]
         result += stub % tuple(these)
         result += '\n'
     result += "Total bracket energy: %s"%bracket_energy(all_winners)
