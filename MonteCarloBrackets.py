@@ -100,6 +100,7 @@ def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
         else:
             if random() < exp(-ediff/T):
                 b = newbracket
+                energy = newenergy
                 if printonswap:
                     print "HIGHER"
                     print b
