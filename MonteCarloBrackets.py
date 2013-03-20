@@ -49,7 +49,7 @@ def energy_of_flipping(current_winner, current_loser):
     return (energy_game(current_loser, current_winner) - 
             energy_game(current_winner, current_loser))
 
-@profile
+#@profile
 def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
              teamdesc=None, printbrackets=True):
     """
