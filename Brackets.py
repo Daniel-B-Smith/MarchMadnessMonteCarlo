@@ -5,7 +5,7 @@ import pylab as pl
 from random import choice,shuffle
 from numpy.random import random #import only one function from somewhere
 from numpy.random import randint
-from numpy import exp,array,zeros
+from numpy import exp,array,zeros,inf
 import scipy
 from time import sleep
 from copy import deepcopy
@@ -31,10 +31,11 @@ def playgame(team1, team2, T):
 
     """
     ediff = deltaU(team1, team2)
-    boltzmann_factor = min(exp(-ediff/T), 1)
+    boltzmann_factor = exp(-ediff/T)
 
+    win_prob = boltzmann_factor/(1+boltzmann_factor) if boltzmann_factor < inf else 1
     # So, prob of team 1 winning is then boltzmann_factor/(1+boltzmann_factor)
-    if random() >= boltzmann_factor/(1+boltzmann_factor):
+    if random() >= win_prob:
         return (team1,team2)
     else:
         return (team2,team1)
