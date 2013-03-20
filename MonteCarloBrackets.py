@@ -49,6 +49,7 @@ def energy_of_flipping(current_winner, current_loser):
     return (energy_game(current_loser, current_winner) - 
             energy_game(current_winner, current_loser))
 
+#@profile
 def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
              teamdesc=None, printbrackets=True):
     """
@@ -78,18 +79,21 @@ def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
         teams = region[:]
     else:
         teams = RAS.teams[region]
-    b = Bracket(teams,T)
+    b = Bracket(teams, T)
+    energy = b.energy()
     ng = sum(b.games_in_rounds) # total number of games
     # Let's collect some statistics
     brackets = []
     for trial in xrange(ntrials):
-        g = randint(0, ng+1) #choice(xrange(ng)) # choose a random game to swap
+        g = randint(0, ng) #choice(xrange(ng)) # choose a random game to swap
         #print "attempted swap for game",g#,"in round",round[g]
         newbracket = deepcopy(b)
         newbracket.swap(g)
-        ediff = newbracket.energy() - b.energy()
+        newenergy = newbracket.energy()
+        ediff = newenergy - energy
         if ediff <= 0:
             b = newbracket
+            energy = newenergy
             if printonswap:
                 print "LOWER"
                 print b

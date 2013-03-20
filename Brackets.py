@@ -31,7 +31,7 @@ def playgame(team1, team2, T):
 
     """
     ediff = deltaU(team1, team2)
-    boltzmann_factor = exp(-ediff/T)
+    boltzmann_factor = min(exp(-ediff/T), 1)
 
     # So, prob of team 1 winning is then boltzmann_factor/(1+boltzmann_factor)
     if random() >= boltzmann_factor/(1+boltzmann_factor):
@@ -97,9 +97,6 @@ def getroundmap(bracket, include_game_number):
                 round[g] = i
             g += 1
     return round
-    
-
-
 
 class Bracket(object):
     def __init__(self, teams, T):
@@ -124,46 +121,47 @@ class Bracket(object):
     __repr__ = __str__
     def __hash__(self):
         return hash(tuple([tuple(aw) for aw in self.bracket]))
-    def game(self,g):
+    def game(self, g):
         """Return (team1,team2,winner).
         """
-        t1,t2,win = self._getgameidxs(g)
+        t1, t2, win = self._getgameidxs(g)
         return (self.bracket[t1[0]][t1[1]], self.bracket[t2[0]][t2[1]],
                 self.bracket[win[0]][win[1]])
+
     def _round_teaminround_to_game(self,r,gir):
-        
         return sum(self.games_in_rounds[:r]) + int(gir/2)
-    def _getgameidxs(self,g):
+
+    def _getgameidxs(self, g):
         # we'll return (round,game) for each of team1, team2, winner
         # 0 1 2 3 4 5 6 7 # teams 1
         # 0 0 1 1 2 2 3 3 # games 1
         # 0 2 4 6 # teams 2
         # 0 0 1 1 # games 2
-        round,game_in_round = self.roundmap_with_game_numbers[g]
+        round, game_in_round = self.roundmap_with_game_numbers[g]
         return ((round,2*game_in_round), (round,2*game_in_round+1), 
                 (round+1,game_in_round))
-    def _setwinner(self,g,winner):
+    def _setwinner(self, g, winner):
         """ JUST SETS THE WINNER, DOES NOT LOOK TO NEXT ROUND! USE SWAP FOR 
         THAT! 
         """
         t1,t2,win = self._getgameidxs(g)
         self.bracket[win[0]][win[1]] = winner
-    def swap(self,g):
+    def swap(self, g):
         """
         NOTE: This does not check 
         """
-        team1,team2,winner = self.game(g)
+        team1, team2, winner = self.game(g)
         if team1 == winner:
             self._setwinner(g, team2)
         else:
             self._setwinner(g, team1)
-        wr,wt = self._getgameidxs(g)[2]
+        wr, wt = self._getgameidxs(g)[2]
         ng = self._round_teaminround_to_game(wr, wt)
         while ng < sum(self.games_in_rounds):
             #print "Now need to check game",wr,wt,ng,self.game(ng)
-            winner,loser = playgame(self.game(ng)[0], self.game(ng)[1], self.T)
+            winner, loser = playgame(self.game(ng)[0], self.game(ng)[1], self.T)
             self._setwinner(ng, winner)
-            wr,wt = self._getgameidxs(ng)[2]
+            wr, wt = self._getgameidxs(ng)[2]
             ng = self._round_teaminround_to_game(wr, wt)
     def upsets(self):
         result = 0
