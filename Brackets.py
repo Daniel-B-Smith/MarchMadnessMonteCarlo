@@ -119,7 +119,8 @@ class Bracket(object):
         self.roundmap_with_game_numbers = getroundmap(self.bracket, 
                                                       include_game_number=True)
     def copy(self):
-        return self.__class__(self.teams, self.T, bracket=self.bracket)
+        return self.__class__(self.teams, self.T, 
+                              bracket=deepcopy(self.bracket))
     def energy(self):
         return bracket_energy(self.bracket)
     def __str__(self):
