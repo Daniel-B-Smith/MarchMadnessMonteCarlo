@@ -49,7 +49,7 @@ def energy_of_flipping(current_winner, current_loser):
     return (energy_game(current_loser, current_winner) - 
             energy_game(current_winner, current_loser))
 
-#@profile
+@profile
 def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
              teamdesc=None, printbrackets=True):
     """
@@ -87,7 +87,8 @@ def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
     for trial in xrange(ntrials):
         g = randint(0, ng) #choice(xrange(ng)) # choose a random game to swap
         #print "attempted swap for game",g#,"in round",round[g]
-        newbracket = deepcopy(b)
+        #newbracket = deepcopy(b)
+        newbracket = b.copy()
         newbracket.swap(g)
         newenergy = newbracket.energy()
         ediff = newenergy - energy
