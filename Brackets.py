@@ -100,7 +100,7 @@ def getroundmap(bracket, include_game_number):
     return round
 
 class Bracket(object):
-    def __init__(self, teams, T):
+    def __init__(self, teams, T, bracket=None):
         """
         
         Arguments:
@@ -109,12 +109,17 @@ class Bracket(object):
         """
         self.teams = teams
         self.T = T
-        self.bracket = runbracket(self.teams, self.T)
+        if bracket is None:
+            self.bracket = runbracket(self.teams, self.T)
+        else:
+            self.bracket = bracket
         self.games_in_rounds = [2**i for i in 
                                 reversed(xrange(len(self.bracket)-1))]
         self.roundmap = getroundmap(self.bracket, include_game_number=False)
         self.roundmap_with_game_numbers = getroundmap(self.bracket, 
                                                       include_game_number=True)
+    def copy(self):
+        return self.__class__(self.teams, self.T, bracket=self.bracket)
     def energy(self):
         return bracket_energy(self.bracket)
     def __str__(self):
