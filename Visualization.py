@@ -2,10 +2,10 @@
 from __future__ import division
 import numpy as np
 import pylab as pl
-from random import choice,shuffle
+from random import choice, shuffle
 from numpy.random import random #import only one function from somewhere
 from numpy.random import randint
-from numpy import exp,array,zeros
+from numpy import exp, array, zeros, ones, convolve
 import scipy
 from time import sleep
 from copy import deepcopy
@@ -16,16 +16,43 @@ import RankingsAndStrength as RAS
 import Brackets
 from Brackets import Bracket
 
+def movingaverage(interval, window_size):
+    window= ones(int(window_size))/float(window_size)
+    return convolve(interval, window, 'same')
+
 def plotone(brackets, label, subplot1, subplot2, values=None, label2=None, 
-            values2=None, teamdesc=None):
+            values2=None, teamdesc=None, useavg=False):
+    """
+    Plotting too many points causes lots of trouble for matplotlib. At
+    the moment, we deal with that by plotting at most 50000 points,
+    skipping evenly through the data if needed.
+    """
+    maxpts = 50000
+
     ntrials = len(brackets)
     if values is None:
         try:
             values = [getattr(b,label)() for b in brackets]
         except TypeError:
             values = [getattr(b,label) for b in brackets]
+
+    if len(values) >= 50000:
+        step = divmod(len(values),maxpts)[0]
+    else:
+        step = 1
+    
     pl.subplot(subplot1)
-    pl.plot(xrange(ntrials),values,'.',label=label)
+    pl.plot(xrange(0,ntrials,step),values[::step],'.',label=label)
+    if useavg:
+        # want something like 2000 windows
+        if step > 1:
+            npts = maxpts
+        else:
+            npts = len(values)
+        avgstep = divmod(len(values),int(npts/25))[0]
+        
+        pl.plot(xrange(0,ntrials,step),movingaverage(values[::step],avgstep),'-',label='avg. '+label)
+            
     pl.ylabel(label.capitalize())
     pl.xlabel('Game')
     if teamdesc is not None:
@@ -45,7 +72,7 @@ def plotone(brackets, label, subplot1, subplot2, values=None, label2=None,
         pl.title('%s distribution, T=%s'%(label.capitalize(), brackets[0].T))
     else:
         pl.subplot(subplot2)
-        pl.plot(xrange(ntrials),values2,'.',label=label2)
+        pl.plot(xrange(0,ntrials,step),values2[::step],'.',label=label2)
         pl.ylabel(label2.capitalize())
         pl.xlabel('Game')
         pl.title('%s over the trajectory, T=%s'%(label2.capitalize(),

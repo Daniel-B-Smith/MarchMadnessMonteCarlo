@@ -18,6 +18,8 @@ import Brackets
 from Brackets import Bracket
 import Stats
 
+from decorators import memoized
+
 regional_rankings = RAS.regional_rankings
 #strength = RAS.kenpom['Luck']
 #strength = RAS.sagarin['Rating']
@@ -26,6 +28,7 @@ strength = RAS.kenpom['Pyth']
 #T = 0.5 # In units of epsilon/k
 #T = 2.5 # In units of epsilon/k
 
+#@memoized
 def energy_game(winner, loser):
     """This is where you'll input your own energy functions. Here are
     some of the things we talked about in class. Remember that you
@@ -42,6 +45,7 @@ def energy_game(winner, loser):
     #print "energy_game(",winner,loser,")",result
     return result
 
+#@memoized
 def energy_of_flipping(current_winner, current_loser):
     """Given the current winner and the current loser, this calculates
     the energy of swapping, i.e. having the current winner lose.
@@ -85,7 +89,7 @@ def simulate(ntrials, region, T, printonswap=False, showvis=True, newfig=False,
     # Let's collect some statistics
     brackets = []
     for trial in xrange(ntrials):
-        g = randint(0, ng) #choice(xrange(ng)) # choose a random game to swap
+        g = randint(0, ng) # choose a random game to swap
         #print "attempted swap for game",g#,"in round",round[g]
         #newbracket = deepcopy(b)
         newbracket = b.copy()

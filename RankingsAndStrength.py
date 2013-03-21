@@ -9,15 +9,27 @@ from numpy.random import random #import only one function from somewhere
 # Could be St. Mary's instead of Middle Tennessee
 # Could be Liberty instead of North Carolina A&T.
 teams = {}
-teams['midwest'] = ['Louisville','North Carolina A&T','Colorado St.','Missouri','Oklahoma St.','Oregon','St. Louis','New Mexico St.','Memphis','Middle Tennessee','Michigan St.','Valparaiso','Creighton','Cincinnati','Duke','Albany']
+teams['midwest'] = ['Louisville','North Carolina A&T','Colorado St.','Missouri',
+                    'Oklahoma St.','Oregon','St. Louis','New Mexico St.',
+                    'Memphis',"St. Mary's",'Michigan St.','Valparaiso',
+                    'Creighton','Cincinnati','Duke','Albany']
 
 #Could be La Salle instead of Boise St.
-teams['west'] = ['Gonzaga','Southern','Pittsburgh','Wichita St.','Wisconsin','Mississippi','Kansas St.','Boise St.','Arizona','Belmont','New Mexico','Harvard','Notre Dame','Iowa St.','Ohio St.','Iona']
+teams['west'] = ['Gonzaga','Southern','Pittsburgh','Wichita St.',
+                 'Wisconsin','Mississippi','Kansas St.','La Salle',
+                 'Arizona','Belmont','New Mexico','Harvard',
+                 'Notre Dame','Iowa St.','Ohio St.','Iona']
 
-teams['south'] = ['Kansas','Western Kentucky','North Carolina','Villanova','Virginia Commonwealth','Akron','Michigan','South Dakota St.','UCLA','Minnesota','Florida','Northwestern St.','San Diego St.','Oklahoma','Georgetown','Florida Gulf Coast']
+teams['south'] = ['Kansas','Western Kentucky','North Carolina','Villanova',
+                  'Virginia Commonwealth','Akron','Michigan','South Dakota St.',
+                  'UCLA','Minnesota','Florida','Northwestern St.',
+                  'San Diego St.','Oklahoma','Georgetown','Florida Gulf Coast']
 
 # Could be Long Island instead of James Madison
-teams['east'] = ['Indiana','James Madison','North Carolina St.','Temple','Nevada Las Vegas','California','Syracuse','Montana','Butler','Bucknell','Marquette','Davidson','Illinois','Colorado','Miami FL','Pacific']
+teams['east'] = ['Indiana','James Madison','North Carolina St.','Temple',
+                 'Nevada Las Vegas','California','Syracuse','Montana',
+                 'Butler','Bucknell','Marquette','Davidson',
+                 'Illinois','Colorado','Miami FL','Pacific']
 
 
 # These are all listed in the same order:

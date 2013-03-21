@@ -463,8 +463,9 @@ def sanitize_teamname(name):
     result = result.replace('Southern U.','Southern')
     result = result.replace('UNLV','Nevada Las Vegas')
     result = result.replace('Miami-Florida','Miami FL')
+    result = result.replace("St. Mary's-Cal.","St. Mary's")
     return result
-#print sanitize_teamname('NC A&T')
+#print sanitize_teamname("Saint MAry's-Cal.")
 
 sagarindata = {}
 for line in text.split('\n'):
